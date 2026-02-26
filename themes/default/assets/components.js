@@ -113,10 +113,11 @@
       '<svg class="pp-icon-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6,3 20,12 6,21"/></svg>' +
       '<svg class="pp-icon-pause" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>' +
       '</button>';
-    // Loop
+    // Loop — 3 states: off → loop-all → loop-one
     if (showLoop) {
       html += '<button class="pp-btn pp-loop' + (loop ? ' active' : '') + '" title="Loop">' +
-        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>' +
+        '<svg class="pp-loop-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>' +
+        '<svg class="pp-loop1-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/><text x="12" y="15" text-anchor="middle" fill="currentColor" stroke="none" font-size="9" font-weight="bold">1</text></svg>' +
         '</button>';
     }
     // Volume
@@ -189,9 +190,40 @@
     });
 
     if (loopBtn) {
+      // Loop states: 0=off, 1=loop-all, 2=loop-one
+      var loopState = loop ? 1 : 0;
+      var loopIcon = loopBtn.querySelector('.pp-loop-icon');
+      var loop1Icon = loopBtn.querySelector('.pp-loop1-icon');
+
+      function updateLoopUI() {
+        if (loopState === 0) {
+          // Off
+          audio.loop = false;
+          loopBtn.classList.remove('active');
+          loopIcon.style.display = '';
+          loop1Icon.style.display = 'none';
+          loopBtn.title = '循环：关';
+        } else if (loopState === 1) {
+          // Loop all (for single track = same as loop)
+          audio.loop = true;
+          loopBtn.classList.add('active');
+          loopIcon.style.display = '';
+          loop1Icon.style.display = 'none';
+          loopBtn.title = '循环：全部';
+        } else {
+          // Loop one
+          audio.loop = true;
+          loopBtn.classList.add('active');
+          loopIcon.style.display = 'none';
+          loop1Icon.style.display = '';
+          loopBtn.title = '循环：单曲';
+        }
+      }
+      updateLoopUI();
+
       loopBtn.addEventListener('click', function () {
-        audio.loop = !audio.loop;
-        loopBtn.classList.toggle('active', audio.loop);
+        loopState = (loopState + 1) % 3;
+        updateLoopUI();
       });
     }
 
