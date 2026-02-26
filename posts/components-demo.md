@@ -1,0 +1,81 @@
+---
+title: 组件演示
+date: 2026-02-26
+tags: [Paper, 组件]
+description: Paper 内置组件演示 — 音乐播放器、卡片、按钮、计数器。
+---
+
+## 音乐播放器
+
+默认播放器（带标题、作者、循环按钮、音量控制）：
+
+{% player src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" title="SoundHelix Song 1" artist="T. Schürger" loop="false" %}
+
+无封面、无作者的简洁播放器：
+
+{% player src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" title="背景音乐" loop="true" %}
+
+## 卡片组件
+
+简单卡片：
+
+{% card icon="📝" title="Paper Blog" subtitle="极简静态博客框架" text="纸质暖色调，为 GitHub Pages 而生。" %}
+
+### 墓碑卡片 + 计数器
+
+{% card icon="🪦" title="某某某" subtitle="UID: 1234567890" text="他来过，他骚扰过，他被挂了。" %}
+
+{% counter key="demo_mourn" label="为此人哀悼" icon="🙏" %}
+
+### 带内容的卡片
+
+{% card icon="🎉" title="欢迎使用 Paper" text="这是一个功能丰富的静态博客框架。" %}
+
+## 按钮组件
+
+{% btn label="默认按钮" %}
+{% btn label="主要按钮" style="primary" %}
+{% btn label="强调按钮" style="accent" %}
+{% btn label="小按钮" style="accent" size="sm" %}
+{% btn label="大按钮" style="primary" size="lg" %}
+{% btn label="链接按钮" href="https://github.com/Linbo-cyber/paper" style="accent" %}
+
+## 图片加载
+
+正常图片（会显示骨架加载动画）：
+
+![测试图片](https://picsum.photos/800/400)
+
+加载失败的图片（会显示破碎图片图标）：
+
+![不存在的图片](https://example.com/nonexistent-image-12345.jpg)
+
+## 组件语法参考
+
+### 音乐播放器
+
+```
+{%- player src="音频URL" title="标题" artist="作者" cover="封面URL" loop="true" autoplay="false" volume="true" loopBtn="true" -%}
+```
+
+所有参数除 `src` 外均可选。
+
+### 卡片
+
+```
+{%- card icon="🪦" title="标题" subtitle="副标题" text="描述文字" align="center" style="自定义CSS" -%}
+可选的卡片内容（如按钮、计数器等）
+{%- endcard -%}
+```
+
+### 计数器按钮
+
+```
+{%- counter key="唯一标识" label="按钮文字" icon="🙏" -%}
+```
+
+### 按钮
+
+```
+{%- btn label="文字" href="链接" style="primary|accent" size="sm|lg" -%}
+```

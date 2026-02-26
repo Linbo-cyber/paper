@@ -68,9 +68,114 @@ renderer.heading = function ({ text, depth, raw }) {
   return `<h${depth} id="${id}">${text}</h${depth}>`;
 };
 
+function processComponents(html) {
+  // Music player: {% player src="..." title="..." artist="..." cover="..." loop="true" autoplay="false" volume="true" loopBtn="true" %}
+  html = html.replace(/\{%\s*player\s+([\s\S]*?)%\}/g, (_, attrs) => {
+    const get = (k, def) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : def || ''; };
+    const dataAttrs = ['src', 'title', 'artist', 'cover', 'loop', 'autoplay', 'volume', 'loopBtn']
+      .map(k => { const v = get(k); return v ? `data-${k.toLowerCase()}="${v}"` : ''; })
+      .filter(Boolean).join(' ');
+    return `<div class="paper-player" ${dataAttrs}></div>`;
+  });
+
+  // Card: {% card icon="🪦" title="..." subtitle="..." text="..." align="center" style="..." %}...{% endcard %}
+  html = html.replace(/\{%\s*card\s+([\s\S]*?)%\}([\s\S]*?)\{%\s*endcard\s*%\}/g, (_, attrs, body) => {
+    const get = (k) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : ''; };
+    const icon = get('icon');
+    const title = get('title');
+    const subtitle = get('subtitle');
+    const text = get('text');
+    const align = get('align');
+    const style = get('style');
+    const cls = align === 'left' ? ' card-left' : align === 'right' ? ' card-right' : '';
+    let out = `<div class="paper-card${cls}"${style ? ` style="${style}"` : ''}>`;
+    if (icon) out += `<div class="card-icon">${icon}</div>`;
+    if (title) out += `<p class="card-title">${title}</p>`;
+    if (subtitle) out += `<p class="card-subtitle">${subtitle}</p>`;
+    if (text) out += `<p class="card-text">${text}</p>`;
+    if (body.trim()) out += `<hr class="card-divider" /><div class="card-footer">${body.trim()}</div>`;
+    out += '</div>';
+    return out;
+  });
+
+  // Standalone card (no body): {% card icon="🪦" title="..." subtitle="..." text="..." %}
+  html = html.replace(/\{%\s*card\s+([\s\S]*?)%\}/g, (_, attrs) => {
+    const get = (k) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : ''; };
+    const icon = get('icon');
+    const title = get('title');
+    const subtitle = get('subtitle');
+    const text = get('text');
+    const align = get('align');
+    const style = get('style');
+    const cls = align === 'left' ? ' card-left' : align === 'right' ? ' card-right' : '';
+    let out = `<div class="paper-card${cls}"${style ? ` style="${style}"` : ''}>`;
+    if (icon) out += `<div class="card-icon">${icon}</div>`;
+    if (title) out += `<p class="card-title">${title}</p>`;
+    if (subtitle) out += `<p class="card-subtitle">${subtitle}</p>`;
+    if (text) out += `<p class="card-text">${text}</p>`;
+    out += '</div>';
+    return out;
+  });
+
+  // Counter button: {% counter key="..." label="..." icon="🙏" %}
+  html = html.replace(/\{%\s*counter\s+([\s\S]*?)%\}/g, (_, attrs) => {
+    const get = (k, def) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : def || ''; };
+    const key = get('key', 'paper_counter');
+    const label = get('label', 'Click');
+    const icon = get('icon');
+    return `<div class="paper-counter-btn" data-key="${key}" data-label="${label}" data-icon="${icon}"></div>`;
+  });
+
+  // Button: {% btn label="..." href="..." style="primary|accent" size="sm|lg" %}
+  html = html.replace(/\{%\s*btn\s+([\s\S]*?)%\}/g, (_, attrs) => {
+    const get = (k) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : ''; };
+    const label = get('label') || 'Button';
+    const href = get('href');
+    const style = get('style');
+    const size = get('size');
+    const cls = ['paper-btn', style ? `btn-${style}` : '', size ? `btn-${size}` : ''].filter(Boolean).join(' ');
+    if (href) return `<a class="${cls}" href="${href}">${label}</a>`;
+    return `<button class="${cls}">${label}</button>`;
+  });
+
+  return html;
+}
+
 function renderMarkdown(src) {
   tocItems = [];
-  const html = marked(src, { renderer });
+  // Extract components before markdown to avoid quote escaping
+  const placeholders = {};
+  let idx = 0;
+  src = src.replace(/\{%[\s\S]*?%\}/g, (match) => {
+    const key = `<!--PAPER_COMPONENT_${idx++}-->`;
+    placeholders[key] = match;
+    return key;
+  });
+  // Also handle {% card %}...{% endcard %} blocks
+  src = src.replace(/<!--PAPER_COMPONENT_(\d+)-->([\s\S]*?)<!--PAPER_COMPONENT_(\d+)-->/g, (full, startIdx, body, endIdx) => {
+    const startKey = `<!--PAPER_COMPONENT_${startIdx}-->`;
+    const endKey = `<!--PAPER_COMPONENT_${endIdx}-->`;
+    const startTag = placeholders[startKey] || '';
+    const endTag = placeholders[endKey] || '';
+    if (startTag.includes('card') && endTag.includes('endcard')) {
+      const combinedKey = `<!--PAPER_BLOCK_${startIdx}-->`;
+      placeholders[combinedKey] = startTag + body + endTag;
+      delete placeholders[startKey];
+      delete placeholders[endKey];
+      return combinedKey;
+    }
+    return full;
+  });
+
+  let html = marked(src, { renderer });
+
+  // Restore placeholders and process components
+  for (const [key, val] of Object.entries(placeholders)) {
+    html = html.replace(new RegExp(`<p>\\s*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*</p>`, 'g'), val);
+    html = html.replace(key, val);
+  }
+
+  html = processComponents(html);
   return { html, toc: [...tocItems] };
 }
 
