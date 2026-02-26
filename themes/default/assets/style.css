@@ -338,36 +338,66 @@ pre:hover .code-copy-btn { opacity: 1; }
 /* ── Callouts / Admonitions ────────────────────── */
 
 .callout {
-  border-radius: 8px;
-  padding: 16px;
-  margin: 20px 0;
-  border-left: 4px solid;
+  border-radius: 2px;
+  padding: 16px 18px;
+  margin: 24px 0;
+  border: 1px solid var(--line);
+  border-left: 3px solid;
+  background: var(--paper);
+  box-shadow: 1px 1px 3px rgba(0,0,0,.04);
+  position: relative;
+}
+.callout::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 12px 12px 0;
+  border-color: transparent var(--bg) transparent transparent;
 }
 .callout-header {
   display: flex;
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
   margin-bottom: 8px;
+  letter-spacing: .02em;
+  text-transform: uppercase;
 }
+.callout-header svg { opacity: .7; }
+.callout-body { font-size: 15px; }
 .callout-body p:first-child { margin-top: 0; }
 .callout-body p:last-child { margin-bottom: 0; }
 
-.callout-note { background: rgba(59, 130, 246, .08); border-color: #3b82f6; }
-.callout-note .callout-header { color: #3b82f6; }
+.callout-note { border-left-color: #8b7355; }
+.callout-note .callout-header { color: #8b7355; }
 
-.callout-tip { background: rgba(34, 197, 94, .08); border-color: #22c55e; }
-.callout-tip .callout-header { color: #22c55e; }
+.callout-tip { border-left-color: #6b7c5e; }
+.callout-tip .callout-header { color: #6b7c5e; }
 
-.callout-important { background: rgba(168, 85, 247, .08); border-color: #a855f7; }
-.callout-important .callout-header { color: #a855f7; }
+.callout-important { border-left-color: #7c6b8a; }
+.callout-important .callout-header { color: #7c6b8a; }
 
-.callout-warning { background: rgba(245, 158, 11, .08); border-color: #f59e0b; }
-.callout-warning .callout-header { color: #f59e0b; }
+.callout-warning { border-left-color: #a08040; }
+.callout-warning .callout-header { color: #a08040; }
 
-.callout-caution { background: rgba(239, 68, 68, .08); border-color: #ef4444; }
-.callout-caution .callout-header { color: #ef4444; }
+.callout-caution { border-left-color: #9e5b5b; }
+.callout-caution .callout-header { color: #9e5b5b; }
+
+[data-theme="dark"] .callout { background: var(--code-bg); box-shadow: none; }
+[data-theme="dark"] .callout::before { border-color: transparent var(--bg) transparent transparent; }
+[data-theme="dark"] .callout-note { border-left-color: #b8a080; }
+[data-theme="dark"] .callout-note .callout-header { color: #b8a080; }
+[data-theme="dark"] .callout-tip { border-left-color: #8fa87a; }
+[data-theme="dark"] .callout-tip .callout-header { color: #8fa87a; }
+[data-theme="dark"] .callout-important { border-left-color: #a890b8; }
+[data-theme="dark"] .callout-important .callout-header { color: #a890b8; }
+[data-theme="dark"] .callout-warning { border-left-color: #c8a860; }
+[data-theme="dark"] .callout-warning .callout-header { color: #c8a860; }
+[data-theme="dark"] .callout-caution { border-left-color: #c07878; }
+[data-theme="dark"] .callout-caution .callout-header { color: #c07878; }
 
 /* ── TOC ───────────────────────────────────────── */
 
