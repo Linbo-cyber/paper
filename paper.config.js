@@ -1,7 +1,7 @@
 module.exports = {
   // Site info
-  title: 'My Blog',
-  description: 'A minimal blog built with Paper',
+  title: 'Paper Blog',
+  description: '一个用 Paper 构建的极简博客',
   url: 'https://linbo-cyber.github.io',
   basePath: '/paper',  // e.g. '/paper' for project pages (no trailing slash)
   author: 'Lin Bo',

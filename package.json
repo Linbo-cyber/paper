@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A minimal, warm-toned static blog generator for GitHub Pages",
   "main": "build.js",
+  "bin": {
+    "paper": "bin/paper.js"
+  },
   "scripts": {
     "build": "node build.js",
     "dev": "node build.js --watch",
