@@ -20,6 +20,7 @@ const HELP = `
     build            构建站点
     dev              开发模式（监听变更）
     clean            清理 dist/
+    migrate <dir>    从 Hux Blog (Jekyll) 迁移
 
   选项:
     --help, -h       显示帮助
@@ -236,6 +237,10 @@ switch (cmd) {
     break;
   case 'clean':
     clean();
+    break;
+  case 'migrate':
+    if (!args[0]) die('请指定 Hux Blog 目录: paper migrate <hux-blog-dir> [--out <dir>]');
+    execSync(`node ${path.join(__dirname, 'migrate-hux.js')} ${args.map(a => `"${a}"`).join(' ')}`, { stdio: 'inherit' });
     break;
   case '-v':
   case '--version':

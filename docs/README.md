@@ -10,4 +10,5 @@ Paper 是一个极简静态博客框架，纸质暖色调设计，为 GitHub Pag
 - [组件](components.md)
 - [主题](theming.md)
 - [部署](deployment.md)
+- [从 Hux Blog 迁移](migration.md)
 - [进阶](advanced.md)

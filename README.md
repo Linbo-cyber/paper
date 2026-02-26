@@ -121,6 +121,7 @@ module.exports = {
 - [组件](docs/components.md)
 - [主题](docs/theming.md)
 - [部署](docs/deployment.md)
+- [从 Hux Blog 迁移](docs/migration.md)
 - [进阶](docs/advanced.md)
 
 ## 技术栈
