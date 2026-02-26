@@ -18,6 +18,9 @@
 - 🌐 多语言 i18n
 - 🖨️ 打印友好
 - 🚀 GitHub Actions 一键部署
+- 🎵 内置音乐播放器组件
+- 🃏 卡片 + 按钮 + 计数器组件
+- 🖼️ 图片骨架加载 + 错误状态
 
 ## 快速开始
 
@@ -88,6 +91,53 @@ module.exports = {
   // ...
 };
 ```
+
+## 内置组件
+
+在 Markdown 中使用 `{% %}` 语法插入组件。
+
+### 音乐播放器
+
+```markdown
+{% player src="音频URL" title="标题" artist="作者" cover="封面URL" loop="true" autoplay="false" volume="true" loopBtn="true" %}
+```
+
+- `src` 必填，其余可选
+- `loop`: 初始循环状态（默认 false）
+- `autoplay`: 自动播放（默认 false）
+- 未设置 `cover` 时显示音乐图标
+- 未设置 `artist` 时不显示作者行
+
+### 卡片
+
+```markdown
+{% card icon="🪦" title="标题" subtitle="副标题" text="描述" align="center" style="自定义CSS" %}
+卡片内容（可选，支持 HTML）
+{% endcard %}
+```
+
+无内容时可省略 `{% endcard %}`。
+
+### 计数器按钮
+
+```markdown
+{% counter key="唯一标识" label="按钮文字" icon="🙏" %}
+```
+
+点击后计数 +1，基于 localStorage 持久化，每人限点一次。
+
+### 按钮
+
+```markdown
+{% btn label="文字" href="链接" style="primary|accent" size="sm|lg" %}
+```
+
+### 图片
+
+所有文章内的图片自动启用：
+- 圆角显示
+- 加载时显示骨架动画 + 图片图标
+- 加载失败显示破碎图片图标
 
 ## 部署到 GitHub Pages
 
