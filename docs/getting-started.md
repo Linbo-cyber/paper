@@ -1,8 +1,24 @@
 # 快速开始
 
-三步创建你的博客。
+三种方式创建你的博客。
 
-## 方式一：使用 CLI（推荐）
+## 方式一：GitHub 模板（推荐）
+
+1. 打开 [Paper 仓库](https://github.com/Linbo-cyber/paper)
+2. 点击右上角绿色的 **Use this template** → **Create a new repository**
+3. 填写仓库名，点击创建
+4. 克隆你的新仓库：
+
+```bash
+git clone https://github.com/你的用户名/你的仓库.git
+cd 你的仓库
+npm install
+npm run build
+```
+
+这是最简单的方式，自动继承所有文件和 GitHub Actions 配置。
+
+## 方式二：使用 CLI
 
 ```bash
 # 创建项目
@@ -15,9 +31,7 @@ cd my-blog && npm install
 npm run build
 ```
 
-构建产物在 `dist/` 目录，可以直接部署。
-
-## 方式二：克隆模板
+## 方式三：手动克隆
 
 ```bash
 git clone https://github.com/Linbo-cyber/paper.git my-blog

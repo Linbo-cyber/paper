@@ -2,9 +2,25 @@
 
 极简静态博客框架。纸质暖色调，4 个依赖，50ms 构建，为 GitHub Pages 而生。
 
+[![Use this template](https://img.shields.io/badge/-Use%20this%20template-2ea44f?style=for-the-badge&logo=github)](https://github.com/Linbo-cyber/paper/generate)
+
 [Demo](https://linbo-cyber.github.io/paper/) · [文档](docs/)
 
-## 三步开始
+## 开始使用
+
+### 方式一：GitHub 模板（推荐）
+
+点击上方 **Use this template** 按钮，或仓库页面右上角的绿色按钮，直接创建你自己的博客仓库。
+
+然后：
+
+```bash
+git clone https://github.com/你的用户名/你的仓库.git
+cd 你的仓库
+npm install && npm run build
+```
+
+### 方式二：手动克隆
 
 ```bash
 git clone https://github.com/Linbo-cyber/paper.git my-blog
@@ -12,7 +28,7 @@ cd my-blog && rm -rf .git && git init
 npm install && npm run build
 ```
 
-或使用 CLI：
+### 方式三：CLI
 
 ```bash
 npx paper-blog init my-blog
