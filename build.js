@@ -50,6 +50,43 @@ function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// ── Autospace (Pangu) — CJK ↔ half-width auto-spacing ───
+
+const CJK = '\u2e80-\u2eff\u2f00-\u2fdf\u3040-\u309f\u30a0-\u30ff\u3100-\u312f\u3200-\u32ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\ufe30-\ufe4f';
+const ANS = 'A-Za-z0-9';
+const RE_CJK_ANS = new RegExp(`([${CJK}])([${ANS}])`, 'g');
+const RE_ANS_CJK = new RegExp(`([${ANS}])([${CJK}])`, 'g');
+
+function autospace(html) {
+  // Split HTML into tags and text nodes, skip <pre>/<code> blocks
+  const parts = html.split(/(<\/?[^>]+>)/);
+  let inPre = 0;
+  let inCode = 0;
+
+  for (let i = 0; i < parts.length; i++) {
+    const p = parts[i];
+    if (!p) continue;
+
+    // Track <pre> and <code> nesting
+    if (p.startsWith('<')) {
+      if (/^<pre[\s>]/i.test(p)) inPre++;
+      else if (/^<\/pre>/i.test(p)) inPre = Math.max(0, inPre - 1);
+      if (/^<code[\s>]/i.test(p)) inCode++;
+      else if (/^<\/code>/i.test(p)) inCode = Math.max(0, inCode - 1);
+      continue;
+    }
+
+    // Only process text nodes outside <pre>/<code>
+    if (inPre > 0 || inCode > 0) continue;
+
+    parts[i] = p
+      .replace(RE_CJK_ANS, '$1 $2')
+      .replace(RE_ANS_CJK, '$1 $2');
+  }
+
+  return parts.join('');
+}
+
 // ── Markdown Setup ───────────────────────────────────────
 
 marked.setOptions({
@@ -241,6 +278,7 @@ function renderMarkdown(src) {
   }
 
   html = processComponents(html);
+  html = autospace(html);
   return { html, toc: [...tocItems] };
 }
 
