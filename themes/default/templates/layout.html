@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="{{language}}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{pageTitle}}</title>
+  <meta name="description" content="{{siteDescription}}" />
+  <meta property="og:title" content="{{pageTitle}}" />
+  <meta property="og:description" content="{{siteDescription}}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="{{siteUrl}}" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/style.css" />
+  <link rel="stylesheet" href="/assets/prism.css" />
+  <link rel="alternate" type="application/rss+xml" title="{{siteTitle}}" href="/feed.xml" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="site-title" href="/">{{siteTitle}}</a>
+      <nav class="site-nav">
+        {{#each navItems}}
+        <a href="{{url}}">{{label}}</a>
+        {{/each}}
+        <button class="search-toggle" aria-label="Search" onclick="toggleSearch()">🔍</button>
+        {{#if langSwitcher}}
+        <span class="lang-switch" id="langSwitch"></span>
+        {{/if}}
+      </nav>
+    </div>
+  </header>
+
+  <div class="search-overlay" id="searchOverlay" style="display:none">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="{{searchPlaceholder}}..." autofocus />
+      <div id="searchResults"></div>
+      <button class="search-close" onclick="toggleSearch()">✕</button>
+    </div>
+  </div>
+
+  <main class="wrap">
+    {{{content}}}
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© {{author}}</span>
+      <span class="sep">·</span>
+      <span>{{poweredBy}}</span>
+      {{#if rssEnabled}}
+      <span class="sep">·</span>
+      <a href="/feed.xml">{{rssLabel}}</a>
+      {{/if}}
+    </div>
+  </footer>
+
+  <script src="/assets/search.js"></script>
+  <script src="/assets/prism.js"></script>
+  {{#if langSwitcher}}
+  <script src="/assets/lang.js"></script>
+  {{/if}}
+</body>
+</html>

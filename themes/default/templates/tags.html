@@ -1,0 +1,22 @@
+<section class="paper">
+  <h1>{{tagsTitle}}</h1>
+  <div class="tag-cloud">
+    {{#each tags}}
+    <a class="tag-item" href="#{{tagId}}" data-count="{{count}}">{{tag}} <sup>{{count}}</sup></a>
+    {{/each}}
+  </div>
+  <hr />
+  {{#each tags}}
+  <div class="tag-section" id="{{tagId}}">
+    <h2>{{tag}}</h2>
+    <ul class="archive-list">
+      {{#each posts}}
+      <li>
+        <time>{{date}}</time>
+        <a href="{{url}}">{{title}}</a>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/each}}
+</section>

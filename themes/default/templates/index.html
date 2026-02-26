@@ -1,0 +1,33 @@
+<section class="paper post-list">
+  {{#each posts}}
+  <article class="post-item">
+    <h2 class="post-item-title"><a href="{{url}}">{{title}}</a></h2>
+    <div class="post-meta">
+      <time>{{date}}</time>
+      <span class="sep">·</span>
+      <span>{{readingTimeText}}</span>
+      {{#if hasTags}}
+      <span class="sep">·</span>
+      {{#each tagList}}
+      <a class="tag" href="{{tagUrl}}">{{tag}}</a>
+      {{/each}}
+      {{/if}}
+    </div>
+    {{#if description}}
+    <p class="post-excerpt">{{description}}</p>
+    {{/if}}
+  </article>
+  {{/each}}
+
+  {{#if hasPagination}}
+  <nav class="pagination">
+    {{#if hasPrevPage}}
+    <a class="page-link prev" href="{{prevPageUrl}}">←</a>
+    {{/if}}
+    <span class="page-info">{{currentPage}} / {{totalPages}}</span>
+    {{#if hasNextPage}}
+    <a class="page-link next" href="{{nextPageUrl}}">→</a>
+    {{/if}}
+  </nav>
+  {{/if}}
+</section>

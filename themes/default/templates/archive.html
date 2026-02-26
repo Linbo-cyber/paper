@@ -1,0 +1,14 @@
+<section class="paper">
+  <h1>{{archiveTitle}}</h1>
+  {{#each years}}
+  <h2 class="archive-year">{{year}}</h2>
+  <ul class="archive-list">
+    {{#each posts}}
+    <li>
+      <time>{{date}}</time>
+      <a href="{{url}}">{{title}}</a>
+    </li>
+    {{/each}}
+  </ul>
+  {{/each}}
+</section>

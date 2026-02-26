@@ -1,0 +1,117 @@
+# Paper
+
+极简静态博客框架。纸质暖色调，为 GitHub Pages 而生。
+
+## 特性
+
+- 📝 Markdown + YAML frontmatter
+- 🎨 纸质暖色调 + 深色模式自适应
+- 🔍 客户端全文搜索（Ctrl+K）
+- 📑 自动目录（TOC）
+- 🏷️ 标签 + 归档
+- 💬 评论（utterances）
+- 📡 RSS / Atom
+- 🗺️ Sitemap + robots.txt
+- ⚡ 代码高亮（Prism.js）
+- 📖 阅读时间估算
+- 📄 分页
+- 🌐 多语言 i18n
+- 🖨️ 打印友好
+- 🚀 GitHub Actions 一键部署
+
+## 快速开始
+
+```bash
+# 1. 用这个模板创建你的博客
+git clone https://github.com/Linbo-cyber/paper.git my-blog
+cd my-blog
+rm -rf .git && git init
+
+# 2. 安装
+npm install
+
+# 3. 配置
+# 编辑 paper.config.js
+
+# 4. 写文章
+# 在 posts/ 下创建 .md 文件
+
+# 5. 构建
+npm run build
+# 输出在 dist/
+```
+
+## 目录结构
+
+```
+my-blog/
+├── posts/              # 文章（Markdown）
+├── pages/              # 独立页面（Markdown）
+├── themes/
+│   └── default/
+│       ├── templates/  # HTML 模板
+│       └── assets/     # CSS / JS
+├── paper.config.js     # 站点配置
+├── build.js            # 构建脚本
+├── favicon.svg         # 站点图标
+└── .github/
+    └── workflows/
+        └── deploy.yml  # 自动部署
+```
+
+## 文章格式
+
+```markdown
+---
+title: 文章标题
+date: 2026-01-01
+tags: [标签1, 标签2]
+description: 文章摘要
+draft: false
+---
+
+正文内容...
+```
+
+## 配置
+
+编辑 `paper.config.js`：
+
+```js
+module.exports = {
+  title: 'My Blog',
+  description: '...',
+  url: 'https://username.github.io',
+  author: 'Your Name',
+  language: 'zh-CN',
+  postsPerPage: 10,
+  // ...
+};
+```
+
+## 部署到 GitHub Pages
+
+1. 推送到 GitHub
+2. Settings → Pages → Source 选 "GitHub Actions"
+3. 推送后自动构建部署
+
+## 自定义主题
+
+复制 `themes/default/` 为新目录，修改模板和样式，在配置中切换 `theme` 字段。
+
+模板使用简单的 mustache 语法：
+- `{{variable}}` — 转义输出
+- `{{{variable}}}` — 原始 HTML
+- `{{#if key}}...{{/if}}` — 条件
+- `{{#each key}}...{{/each}}` — 循环
+
+## 依赖
+
+- [marked](https://github.com/markedjs/marked) — Markdown 解析
+- [gray-matter](https://github.com/jonschlinkert/gray-matter) — Frontmatter 解析
+- [feed](https://github.com/jpmonette/feed) — RSS/Atom 生成
+- [Prism.js](https://prismjs.com/) — 代码高亮
+
+## License
+
+MIT

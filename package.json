@@ -1,0 +1,20 @@
+{
+  "name": "paper-blog",
+  "version": "1.0.0",
+  "description": "A minimal, warm-toned static blog generator for GitHub Pages",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["blog", "static-site-generator", "github-pages", "minimal"],
+  "author": "Lin Bo",
+  "license": "MIT",
+  "dependencies": {
+    "marked": "^15.0.0",
+    "gray-matter": "^4.0.3",
+    "feed": "^4.2.2",
+    "chokidar": "^4.0.0"
+  }
+}
