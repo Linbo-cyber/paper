@@ -408,6 +408,38 @@ pre:hover .code-copy-btn { opacity: 1; }
 .toc a { color: var(--muted); }
 .toc a:hover { color: var(--ink); }
 
+/* ── Links / Friends ──────────────────────────── */
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+.link-card {
+  display: block;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: box-shadow .2s, border-color .2s;
+}
+.link-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.link-name {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.link-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
 /* ── Related Posts ─────────────────────────────── */
 
 .related-posts {

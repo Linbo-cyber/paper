@@ -18,6 +18,7 @@ module.exports = {
       archive: '归档',
       tags: '标签',
       about: '关于',
+      links: '友链',
       search: '搜索',
       toc: '目录',
       readingTime: '分钟阅读',
@@ -37,6 +38,7 @@ module.exports = {
       archive: 'Archive',
       tags: 'Tags',
       about: 'About',
+      links: 'Links',
       search: 'Search',
       toc: 'Table of Contents',
       readingTime: 'min read',
@@ -71,6 +73,7 @@ module.exports = {
     { key: 'posts', url: '/' },
     { key: 'archive', url: '/archive.html' },
     { key: 'tags', url: '/tags.html' },
+    { key: 'links', url: '/links.html' },
     { key: 'about', url: '/about.html' },
   ],
 
@@ -82,4 +85,9 @@ module.exports = {
 
   // Code highlighting theme (prism)
   codeTheme: 'tomorrow',
+
+  // 友链
+  links: [
+    { name: 'Paper', url: 'https://github.com/Linbo-cyber/paper', desc: '极简静态博客框架' },
+  ],
 };

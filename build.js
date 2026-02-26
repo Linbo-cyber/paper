@@ -296,34 +296,58 @@ function buildTocHtml(toc, lang) {
 // ── Template Engine (simple mustache-like) ───────────────
 
 function render(template, data) {
-  // Process blocks from inside out to handle nesting
+  // {{#each key}}...{{/each}} — handle nesting via balanced matching (FIRST)
   let prev;
   do {
     prev = template;
-    // {{#if key}}...{{/if}} (innermost first)
+    const eachStart = template.indexOf('{{#each ');
+    if (eachStart === -1) break;
+    const keyMatch = template.slice(eachStart).match(/^\{\{#each (\w+)\}\}/);
+    if (!keyMatch) break;
+    const key = keyMatch[1];
+    const bodyStart = eachStart + keyMatch[0].length;
+    let depth = 1;
+    let pos = bodyStart;
+    while (depth > 0 && pos < template.length) {
+      const nextOpen = template.indexOf('{{#each ', pos);
+      const nextClose = template.indexOf('{{/each}}', pos);
+      if (nextClose === -1) break;
+      if (nextOpen !== -1 && nextOpen < nextClose) {
+        depth++;
+        pos = nextOpen + 8;
+      } else {
+        depth--;
+        if (depth === 0) {
+          const body = template.slice(bodyStart, nextClose);
+          const arr = data[key];
+          let replacement = '';
+          if (Array.isArray(arr)) {
+            replacement = arr.map((item, i) => {
+              const ctx = typeof item === 'object' ? { ...data, ...item, _index: i } : { ...data, _item: item, _index: i };
+              return render(body, ctx);
+            }).join('');
+          }
+          template = template.slice(0, eachStart) + replacement + template.slice(nextClose + 9);
+        } else {
+          pos = nextClose + 9;
+        }
+      }
+    }
+  } while (template !== prev);
+
+  // {{#if key}}...{{/if}}
+  do {
+    prev = template;
     template = template.replace(/\{\{#if (\w+)\}\}((?:(?!\{\{#if )[\s\S])*?)\{\{\/if\}\}/g, (_, key, body) => {
       return data[key] ? body : '';
     });
   } while (template !== prev);
 
+  // {{#unless key}}...{{/unless}}
   do {
     prev = template;
-    // {{#unless key}}...{{/unless}}
     template = template.replace(/\{\{#unless (\w+)\}\}((?:(?!\{\{#unless )[\s\S])*?)\{\{\/unless\}\}/g, (_, key, body) => {
       return data[key] ? '' : body;
-    });
-  } while (template !== prev);
-
-  do {
-    prev = template;
-    // {{#each key}}...{{/each}}
-    template = template.replace(/\{\{#each (\w+)\}\}((?:(?!\{\{#each )[\s\S])*?)\{\{\/each\}\}/g, (_, key, body) => {
-      const arr = data[key];
-      if (!Array.isArray(arr)) return '';
-      return arr.map((item, i) => {
-        const ctx = typeof item === 'object' ? { ...data, ...item, _index: i } : { ...data, _item: item, _index: i };
-        return render(body, ctx);
-      }).join('');
     });
   } while (template !== prev);
 
@@ -664,6 +688,19 @@ function buildSitemap(posts, pages) {
     `User-agent: *\nAllow: /\nSitemap: ${base}/sitemap.xml\n`);
 }
 
+function buildLinks() {
+  if (!config.links || config.links.length === 0) return;
+  const tpl = buildCommon();
+  const data = {
+    ...tpl,
+    pageTitle: `${t('links')} - ${config.title}`,
+    linksTitle: t('links'),
+    links: config.links,
+  };
+  const html = renderPage('links', data);
+  fs.writeFileSync(path.join(DIST, 'links.html'), html);
+}
+
 function build404() {
   const tpl = buildCommon();
   const data = {
@@ -718,6 +755,7 @@ function buildAll() {
   buildArchive(posts);
   buildTags(posts);
   buildCustomPages(pages);
+  buildLinks();
   buildSearchIndex(posts);
   buildRSS(posts);
   buildSitemap(posts, pages);

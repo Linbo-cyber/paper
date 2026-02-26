@@ -1,0 +1,13 @@
+<section class="paper">
+  <h1>{{linksTitle}}</h1>
+  <div class="links-grid">
+    {{#each links}}
+    <a class="link-card" href="{{url}}" target="_blank" rel="noopener">
+      <div class="link-name">{{name}}</div>
+      {{#if desc}}
+      <div class="link-desc">{{desc}}</div>
+      {{/if}}
+    </a>
+    {{/each}}
+  </div>
+</section>
