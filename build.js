@@ -8,6 +8,7 @@ const { marked } = require('marked');
 const { Feed } = require('feed');
 
 const config = require(path.resolve('paper.config.js'));
+const B = config.basePath || '';  // e.g. '/paper' — no trailing slash
 const DIST = path.resolve('dist');
 const POSTS_DIR = path.resolve('posts');
 const PAGES_DIR = path.resolve('pages');
@@ -166,7 +167,7 @@ function parsePosts() {
       tocHtml: buildTocHtml(toc, lang),
       readingTime: minutes,
       readingTimeText: `${minutes} ${t('readingTime', lang)}`,
-      url: `/posts/${slug}.html`,
+      url: `${B}/posts/${slug}.html`,
     });
   }
 
@@ -195,7 +196,7 @@ function parsePages() {
       html,
       toc,
       tocHtml: buildTocHtml(toc, lang),
-      url: `/${slug}.html`,
+      url: `${B}/${slug}.html`,
     });
   }
   return pages;
@@ -207,12 +208,13 @@ function buildCommon(lang) {
   lang = lang || config.language;
   const navItems = config.nav.map(n => ({
     label: t(n.key, lang),
-    url: n.url,
+    url: B + n.url,
   }));
   return {
     siteTitle: config.title,
     siteDescription: config.description,
     siteUrl: config.url,
+    basePath: B,
     author: config.author,
     language: lang,
     navItems,
@@ -249,7 +251,7 @@ function buildPostPages(posts) {
       hasTags: post.tags.length > 0 ? 'true' : '',
       tagList: post.tags.map(tag => ({
         tag,
-        tagUrl: `/tags.html#${slugify(tag)}`,
+        tagUrl: `${B}/tags.html#${slugify(tag)}`,
       })),
       hasPrev: prev ? 'true' : '',
       hasNext: next ? 'true' : '',
@@ -281,7 +283,7 @@ function buildIndex(posts) {
         hasTags: p.tags.length > 0 ? 'true' : '',
         tagList: p.tags.map(tag => ({
           tag,
-          tagUrl: `/tags.html#${slugify(tag)}`,
+          tagUrl: `${B}/tags.html#${slugify(tag)}`,
         })),
       })),
       hasPagination: totalPages > 1 ? 'true' : '',
@@ -289,8 +291,8 @@ function buildIndex(posts) {
       totalPages,
       hasPrevPage: page > 1 ? 'true' : '',
       hasNextPage: page < totalPages ? 'true' : '',
-      prevPageUrl: page === 2 ? '/index.html' : `/page/${page - 1}.html`,
-      nextPageUrl: `/page/${page}.html`,
+      prevPageUrl: page === 2 ? `${B}/index.html` : `${B}/page/${page - 1}.html`,
+      nextPageUrl: `${B}/page/${page}.html`,
     };
 
     const html = renderPage('index', data);
@@ -380,11 +382,12 @@ function buildSearchIndex(posts) {
 
 function buildRSS(posts) {
   if (!config.rss) return;
+  const siteBase = config.url + B;
   const feed = new Feed({
     title: config.title,
     description: config.description,
-    id: config.url,
-    link: config.url,
+    id: siteBase,
+    link: siteBase,
     language: config.language,
     author: { name: config.author },
   });
@@ -406,11 +409,12 @@ function buildRSS(posts) {
 
 function buildSitemap(posts, pages) {
   if (!config.sitemap) return;
+  const base = config.url + B;
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
   const addUrl = (loc, date, priority) => {
-    xml += `  <url><loc>${config.url}${loc}</loc>`;
+    xml += `  <url><loc>${base}${loc}</loc>`;
     if (date) xml += `<lastmod>${date}</lastmod>`;
     xml += `<priority>${priority}</priority></url>\n`;
   };
@@ -419,14 +423,14 @@ function buildSitemap(posts, pages) {
   addUrl('/archive.html', null, '0.5');
   addUrl('/tags.html', null, '0.5');
 
-  for (const p of posts) addUrl(p.url, p.date, '0.8');
-  for (const p of pages) addUrl(p.url, null, '0.6');
+  for (const p of posts) addUrl('/posts/' + p.slug + '.html', p.date, '0.8');
+  for (const p of pages) addUrl('/' + p.slug + '.html', null, '0.6');
 
   xml += '</urlset>';
   fs.writeFileSync(path.join(DIST, 'sitemap.xml'), xml);
 
   fs.writeFileSync(path.join(DIST, 'robots.txt'),
-    `User-agent: *\nAllow: /\nSitemap: ${config.url}/sitemap.xml\n`);
+    `User-agent: *\nAllow: /\nSitemap: ${base}/sitemap.xml\n`);
 }
 
 function build404() {

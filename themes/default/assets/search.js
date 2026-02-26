@@ -5,6 +5,14 @@
   var input = document.getElementById('searchInput');
   var results = document.getElementById('searchResults');
 
+  // Detect basePath from script src
+  var scripts = document.getElementsByTagName('script');
+  var basePath = '';
+  for (var i = 0; i < scripts.length; i++) {
+    var m = scripts[i].src.match(/(.*)\/assets\/search\.js/);
+    if (m) { basePath = m[1].replace(location.origin, ''); break; }
+  }
+
   window.toggleSearch = function () {
     if (!overlay) return;
     var visible = overlay.style.display !== 'none';
@@ -37,7 +45,7 @@
   }
 
   function loadIndex() {
-    fetch('/search-index.json')
+    fetch(basePath + '/search-index.json')
       .then(function (r) { return r.json(); })
       .then(function (data) { index = data; })
       .catch(function () { index = []; });

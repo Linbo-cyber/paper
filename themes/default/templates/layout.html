@@ -9,15 +9,15 @@
   <meta property="og:description" content="{{siteDescription}}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="{{siteUrl}}" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/assets/style.css" />
-  <link rel="stylesheet" href="/assets/prism.css" />
-  <link rel="alternate" type="application/rss+xml" title="{{siteTitle}}" href="/feed.xml" />
+  <link rel="icon" href="{{basePath}}/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="{{basePath}}/assets/style.css" />
+  <link rel="stylesheet" href="{{basePath}}/assets/prism.css" />
+  <link rel="alternate" type="application/rss+xml" title="{{siteTitle}}" href="{{basePath}}/feed.xml" />
 </head>
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <a class="site-title" href="/">{{siteTitle}}</a>
+      <a class="site-title" href="{{basePath}}/">{{siteTitle}}</a>
       <nav class="site-nav">
         {{#each navItems}}
         <a href="{{url}}">{{label}}</a>
@@ -49,15 +49,15 @@
       <span>{{poweredBy}}</span>
       {{#if rssEnabled}}
       <span class="sep">·</span>
-      <a href="/feed.xml">{{rssLabel}}</a>
+      <a href="{{basePath}}/feed.xml">{{rssLabel}}</a>
       {{/if}}
     </div>
   </footer>
 
-  <script src="/assets/search.js"></script>
-  <script src="/assets/prism.js"></script>
+  <script src="{{basePath}}/assets/search.js"></script>
+  <script src="{{basePath}}/assets/prism.js"></script>
   {{#if langSwitcher}}
-  <script src="/assets/lang.js"></script>
+  <script src="{{basePath}}/assets/lang.js"></script>
   {{/if}}
 </body>
 </html>

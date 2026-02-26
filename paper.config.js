@@ -2,8 +2,9 @@ module.exports = {
   // Site info
   title: 'My Blog',
   description: 'A minimal blog built with Paper',
-  url: 'https://example.github.io',
-  author: 'Your Name',
+  url: 'https://linbo-cyber.github.io',
+  basePath: '/paper',  // e.g. '/paper' for project pages (no trailing slash)
+  author: 'Lin Bo',
   language: 'zh-CN',
 
   // Supported languages for i18n (first is default)
