@@ -3,7 +3,7 @@ title: 新功能演示
 date: 2026-02-26
 tags: [Paper, 组件, 测试]
 description: 演示 Paper v1.1 的新功能 — 主题切换、代码复制、提示框、封面图、相关文章。
-cover: https://picsum.photos/900/300
+cover: https://images.unsplash.com/photo-1517842645767-c639042777db?w=900&h=300&fit=crop
 ---
 
 ## 提示框 / Callout
