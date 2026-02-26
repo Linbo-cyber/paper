@@ -3,8 +3,10 @@
   <article class="post-item">
     <h2 class="post-item-title"><a href="{{url}}">{{title}}</a></h2>
     <div class="post-meta">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
       <time>{{date}}</time>
       <span class="sep">·</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       <span>{{readingTimeText}}</span>
       {{#if hasTags}}
       <span class="sep">·</span>
@@ -22,11 +24,15 @@
   {{#if hasPagination}}
   <nav class="pagination">
     {{#if hasPrevPage}}
-    <a class="page-link prev" href="{{prevPageUrl}}">←</a>
+    <a class="page-link prev" href="{{prevPageUrl}}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </a>
     {{/if}}
     <span class="page-info">{{currentPage}} / {{totalPages}}</span>
     {{#if hasNextPage}}
-    <a class="page-link next" href="{{nextPageUrl}}">→</a>
+    <a class="page-link next" href="{{nextPageUrl}}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
     {{/if}}
   </nav>
   {{/if}}

@@ -10,9 +10,6 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="{{siteUrl}}" />
   <link rel="icon" href="{{basePath}}/favicon.svg" type="image/svg+xml" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" />
   <link rel="stylesheet" href="{{basePath}}/assets/style.css" />
   <link rel="stylesheet" href="{{basePath}}/assets/prism.css" />
   <link rel="alternate" type="application/rss+xml" title="{{siteTitle}}" href="{{basePath}}/feed.xml" />
@@ -25,7 +22,9 @@
         {{#each navItems}}
         <a href="{{url}}">{{label}}</a>
         {{/each}}
-        <button class="search-toggle" aria-label="Search" onclick="toggleSearch()">🔍</button>
+        <button class="search-toggle" aria-label="Search" onclick="toggleSearch()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
         {{#if langSwitcher}}
         <span class="lang-switch" id="langSwitch"></span>
         {{/if}}
@@ -35,9 +34,15 @@
 
   <div class="search-overlay" id="searchOverlay" style="display:none">
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="{{searchPlaceholder}}..." autofocus />
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="searchInput" placeholder="{{searchPlaceholder}}..." autofocus />
+        <kbd class="search-kbd">ESC</kbd>
+      </div>
       <div id="searchResults"></div>
-      <button class="search-close" onclick="toggleSearch()">✕</button>
+      <button class="search-close" onclick="toggleSearch()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
     </div>
   </div>
 
@@ -52,7 +57,9 @@
       <span>{{poweredBy}}</span>
       {{#if rssEnabled}}
       <span class="sep">·</span>
-      <a href="{{basePath}}/feed.xml">{{rssLabel}}</a>
+      <a href="{{basePath}}/feed.xml">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>{{rssLabel}}
+      </a>
       {{/if}}
     </div>
   </footer>

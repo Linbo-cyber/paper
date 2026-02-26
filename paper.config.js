@@ -61,7 +61,7 @@ module.exports = {
   // Comments (utterances)
   comments: {
     enabled: true,
-    repo: 'your-username/your-repo',
+    repo: 'Linbo-cyber/paper',
     issueTerm: 'pathname',
     label: 'comment',
   },

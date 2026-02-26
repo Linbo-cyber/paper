@@ -81,12 +81,13 @@ img { max-width: 100%; height: auto; border-radius: 8px; }
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
   padding: 4px;
-  opacity: .6;
-  transition: opacity .15s;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  transition: color .15s;
 }
-.search-toggle:hover { opacity: 1; }
+.search-toggle:hover { color: var(--ink); }
 
 /* ── Layout ────────────────────────────────────── */
 
@@ -123,6 +124,7 @@ img { max-width: 100%; height: auto; border-radius: 8px; }
 
 .post-meta { font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .post-meta .sep { opacity: .4; }
+.post-meta svg { vertical-align: -2px; flex-shrink: 0; }
 
 .post-excerpt { color: var(--muted); margin: 8px 0 0; font-size: 15px; }
 
@@ -248,8 +250,12 @@ img { max-width: 100%; height: auto; border-radius: 8px; }
   border-top: 1px solid var(--line);
   font-size: 14px;
 }
-.post-nav-link { max-width: 45%; }
+.post-nav-link { max-width: 45%; display: inline-flex; align-items: center; gap: 6px; }
 .post-nav-link.next { margin-left: auto; text-align: right; }
+
+/* ── Comments ──────────────────────────────────── */
+
+.comments-title { font-size: 20px; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
 
 /* ── Archive ───────────────────────────────────── */
 
@@ -322,7 +328,7 @@ img { max-width: 100%; height: auto; border-radius: 8px; }
 
 .search-box input {
   width: 100%;
-  padding: 10px 14px;
+  padding: 10px 14px 10px 38px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--bg);
@@ -333,16 +339,43 @@ img { max-width: 100%; height: auto; border-radius: 8px; }
 }
 .search-box input:focus { border-color: var(--accent); }
 
+.search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.search-kbd {
+  position: absolute;
+  right: 10px;
+  background: var(--line);
+  color: var(--muted);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: inherit;
+  pointer-events: none;
+}
+
 .search-close {
   position: absolute;
   top: 12px;
   right: 16px;
   background: none;
   border: none;
-  font-size: 18px;
   cursor: pointer;
   color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+  transition: color .15s;
 }
+.search-close:hover { color: var(--ink); }
 
 #searchResults {
   margin-top: 12px;
