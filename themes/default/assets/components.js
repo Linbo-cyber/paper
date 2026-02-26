@@ -1,6 +1,67 @@
-// Paper Blog — Components (Music Player, Cards, Buttons, Image Loader)
+// Paper Blog — Components
 (function () {
   'use strict';
+
+  // ── Theme Toggle ──────────────────────────────────────
+  var themeBtn = document.getElementById('themeToggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function () {
+      var html = document.documentElement;
+      var current = html.getAttribute('data-theme');
+      var isDark;
+      if (current === 'auto') {
+        isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      } else {
+        isDark = current === 'dark';
+      }
+      var next = isDark ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('paper_theme', next);
+    });
+  }
+
+  // ── Reading Progress Bar ──────────────────────────────
+  var progressBar = document.getElementById('readingProgress');
+  if (progressBar) {
+    window.addEventListener('scroll', function () {
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      if (h > 0) {
+        progressBar.style.width = (window.scrollY / h * 100) + '%';
+      }
+    }, { passive: true });
+  }
+
+  // ── Back to Top ───────────────────────────────────────
+  var backBtn = document.getElementById('backToTop');
+  if (backBtn) {
+    window.addEventListener('scroll', function () {
+      backBtn.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+    backBtn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // ── Code Copy Buttons ─────────────────────────────────
+  document.querySelectorAll('.post-content pre').forEach(function (pre) {
+    var code = pre.querySelector('code');
+    if (!code) return;
+    var btn = document.createElement('button');
+    btn.className = 'code-copy-btn';
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy';
+    btn.addEventListener('click', function () {
+      var text = code.textContent;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Copied!';
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+    pre.appendChild(btn);
+  });
 
   // ── Music Player ──────────────────────────────────────
   document.querySelectorAll('.paper-player').forEach(function (el) {

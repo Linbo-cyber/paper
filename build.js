@@ -138,11 +138,57 @@ function processComponents(html) {
     return `<button class="${cls}">${label}</button>`;
   });
 
+  // Callouts/Admonitions: :::note, :::tip, :::warning, :::caution
+  html = html.replace(/<p>:::(note|tip|warning|caution|important)(?:\[([^\]]*)\])?<\/p>([\s\S]*?)<p>:::<\/p>/g, (_, type, customTitle, body) => {
+    const icons = {
+      note: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
+      tip: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
+      important: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+      warning: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+      caution: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
+    };
+    const titles = { note: 'Note', tip: 'Tip', important: 'Important', warning: 'Warning', caution: 'Caution' };
+    const title = customTitle || titles[type] || type;
+    return `<div class="callout callout-${type}"><div class="callout-header">${icons[type] || ''}<span>${title}</span></div><div class="callout-body">${body.trim()}</div></div>`;
+  });
+
+  // GitHub-style callouts: > [!NOTE], > [!TIP], etc.
+  html = html.replace(/<blockquote>\s*<p>\[!(NOTE|TIP|WARNING|CAUTION|IMPORTANT)\]<\/p>([\s\S]*?)<\/blockquote>/gi, (_, type, body) => {
+    const t = type.toLowerCase();
+    const icons = {
+      note: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
+      tip: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
+      important: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+      warning: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+      caution: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
+    };
+    const titles = { note: 'Note', tip: 'Tip', important: 'Important', warning: 'Warning', caution: 'Caution' };
+    return `<div class="callout callout-${t}"><div class="callout-header">${icons[t] || ''}<span>${titles[t]}</span></div><div class="callout-body">${body.trim()}</div></div>`;
+  });
+
   return html;
 }
 
 function renderMarkdown(src) {
   tocItems = [];
+
+  // Extract callout blocks before markdown
+  const calloutPlaceholders = {};
+  let cidx = 0;
+  src = src.replace(/^:::(note|tip|warning|caution|important)(?:\[([^\]]*)\])?\n([\s\S]*?)^:::\s*$/gm, (_, type, customTitle, body) => {
+    const key = `<!--PAPER_CALLOUT_${cidx++}-->`;
+    calloutPlaceholders[key] = { type, customTitle, body: body.trim() };
+    return key;
+  });
+
+  // Also handle GitHub-style: > [!NOTE]\n> content
+  src = src.replace(/^>\s*\[!(NOTE|TIP|WARNING|CAUTION|IMPORTANT)\]\s*\n((?:^>.*\n?)*)/gm, (_, type, body) => {
+    const key = `<!--PAPER_CALLOUT_${cidx++}-->`;
+    const cleanBody = body.replace(/^>\s?/gm, '').trim();
+    calloutPlaceholders[key] = { type: type.toLowerCase(), customTitle: '', body: cleanBody };
+    return key;
+  });
+
   // Extract components before markdown to avoid quote escaping
   const placeholders = {};
   let idx = 0;
@@ -169,7 +215,26 @@ function renderMarkdown(src) {
 
   let html = marked(src, { renderer });
 
-  // Restore placeholders and process components
+  // Restore callout placeholders
+  const calloutIcons = {
+    note: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
+    tip: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
+    important: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+    warning: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+    caution: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
+  };
+  const calloutTitles = { note: 'Note', tip: 'Tip', important: 'Important', warning: 'Warning', caution: 'Caution' };
+
+  for (const [key, val] of Object.entries(calloutPlaceholders)) {
+    const title = val.customTitle || calloutTitles[val.type] || val.type;
+    const icon = calloutIcons[val.type] || '';
+    const bodyHtml = marked(val.body, { renderer: new marked.Renderer() });
+    const calloutHtml = `<div class="callout callout-${val.type}"><div class="callout-header">${icon}<span>${title}</span></div><div class="callout-body">${bodyHtml}</div></div>`;
+    html = html.replace(new RegExp(`<p>\\s*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*</p>`, 'g'), calloutHtml);
+    html = html.replace(key, calloutHtml);
+  }
+
+  // Restore component placeholders and process components
   for (const [key, val] of Object.entries(placeholders)) {
     html = html.replace(new RegExp(`<p>\\s*${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*</p>`, 'g'), val);
     html = html.replace(key, val);
@@ -266,6 +331,7 @@ function parsePosts() {
       dateRaw: fm.date ? new Date(fm.date) : new Date(0),
       tags: fm.tags || [],
       lang,
+      cover: fm.cover || '',
       description: fm.description || '',
       html,
       toc,
@@ -339,6 +405,20 @@ function buildCommon(lang) {
   };
 }
 
+function getRelatedPosts(post, allPosts, max) {
+  max = max || 3;
+  if (post.tags.length === 0) return [];
+  const scored = allPosts
+    .filter(p => p.slug !== post.slug)
+    .map(p => {
+      const shared = post.tags.filter(t => p.tags.includes(t)).length;
+      return { post: p, score: shared };
+    })
+    .filter(s => s.score > 0)
+    .sort((a, b) => b.score - a.score);
+  return scored.slice(0, max).map(s => s.post);
+}
+
 function buildPostPages(posts) {
   ensureDir(path.join(DIST, 'posts'));
   const tpl = buildCommon();
@@ -347,11 +427,13 @@ function buildPostPages(posts) {
     const post = posts[i];
     const prev = posts[i + 1] || null;
     const next = posts[i - 1] || null;
+    const related = getRelatedPosts(post, posts, 3);
 
     const data = {
       ...tpl,
       ...post,
       pageTitle: `${post.title} - ${config.title}`,
+      hasCover: post.cover ? 'true' : '',
       hasToc: post.toc.length >= 2 ? 'true' : '',
       hasTags: post.tags.length > 0 ? 'true' : '',
       tagList: post.tags.map(tag => ({
@@ -364,6 +446,12 @@ function buildPostPages(posts) {
       prevUrl: prev ? prev.url : '',
       nextTitle: next ? next.title : '',
       nextUrl: next ? next.url : '',
+      hasRelated: related.length > 0 ? 'true' : '',
+      relatedPosts: related.map(r => ({
+        relTitle: r.title,
+        relUrl: r.url,
+        relDate: r.date,
+      })),
     };
 
     const html = renderPage('post', data);
