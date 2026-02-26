@@ -346,6 +346,7 @@ pre:hover .code-copy-btn { opacity: 1; }
   background: var(--paper);
   box-shadow: 1px 1px 3px rgba(0,0,0,.04);
   position: relative;
+  overflow: hidden;
 }
 .callout::before {
   content: '';
