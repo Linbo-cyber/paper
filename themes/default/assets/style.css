@@ -338,7 +338,7 @@ pre:hover .code-copy-btn { opacity: 1; }
 /* ── Callouts / Admonitions ────────────────────── */
 
 .callout {
-  border-radius: 2px;
+  border-radius: 8px;
   padding: 16px 18px;
   margin: 24px 0;
   border: 1px solid var(--line);
