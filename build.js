@@ -175,6 +175,54 @@ function processComponents(html) {
     return `<button class="${cls}">${label}</button>`;
   });
 
+  // Diagnosis card: {% diagnosis patient="..." id="..." doctor="..." date="..." hospital="..." result="..." detail="..." %}
+  html = html.replace(/\{%\s*diagnosis\s+([\s\S]*?)%\}/g, (_, attrs) => {
+    const get = (k, def) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : def || ''; };
+    const patient = get('patient', '未知');
+    const id = get('id', '000000');
+    const doctor = get('doctor', '主治医师');
+    const date = get('date', new Date().toISOString().slice(0, 10));
+    const hospital = get('hospital', '精神卫生中心');
+    const result = get('result', '确诊');
+    const detail = get('detail', '');
+    let out = '<div class="paper-diagnosis">';
+    out += `<div class="diag-header">${hospital} · 精神科诊断证明</div>`;
+    out += '<div class="diag-stamp">确诊</div>';
+    out += '<div class="diag-body">';
+    out += `<div class="diag-row"><span class="diag-label">患者姓名</span><span class="diag-value">${patient}</span></div>`;
+    out += `<div class="diag-row"><span class="diag-label">病历号</span><span class="diag-value">${id}</span></div>`;
+    out += `<div class="diag-row"><span class="diag-label">就诊日期</span><span class="diag-value">${date}</span></div>`;
+    out += `<div class="diag-row"><span class="diag-label">主治医师</span><span class="diag-value">${doctor}</span></div>`;
+    out += '<hr class="diag-divider" />';
+    out += `<div class="diag-result">${result}</div>`;
+    if (detail) out += `<div class="diag-row" style="margin-top:10px"><span class="diag-label">详细描述</span><span class="diag-value">${detail}</span></div>`;
+    out += '</div>';
+    out += `<div class="diag-footer">本证明仅供医学参考 · ${hospital}</div>`;
+    out += '</div>';
+    return out;
+  });
+
+  // Tombstone: {% tombstone name="..." born="..." died="..." epitaph="..." %}
+  html = html.replace(/\{%\s*tombstone\s+([\s\S]*?)%\}/g, (_, attrs) => {
+    const get = (k, def) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : def || ''; };
+    const name = get('name', 'R.I.P.');
+    const born = get('born', '????');
+    const died = get('died', '????');
+    const epitaph = get('epitaph', '');
+    let out = '<div class="paper-tombstone">';
+    out += '<div class="tomb-stone">';
+    out += '<div class="tomb-cross">✝</div>';
+    out += '<div class="tomb-rip">R.I.P.</div>';
+    out += `<div class="tomb-name">${name}</div>`;
+    out += `<div class="tomb-dates">${born} — ${died}</div>`;
+    if (epitaph) out += `<div class="tomb-epitaph">"${epitaph}"</div>`;
+    out += '</div>';
+    out += '<div class="tomb-base"></div>';
+    out += '<div class="tomb-ground"></div>';
+    out += '</div>';
+    return out;
+  });
+
   // Callouts/Admonitions: :::note, :::tip, :::warning, :::caution
   html = html.replace(/<p>:::(note|tip|warning|caution|important)(?:\[([^\]]*)\])?<\/p>([\s\S]*?)<p>:::<\/p>/g, (_, type, customTitle, body) => {
     const icons = {

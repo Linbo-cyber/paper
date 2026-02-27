@@ -79,3 +79,21 @@ description: Paper 内置组件演示 — 音乐播放器、卡片、按钮、�
 ```
 {%- btn label="文字" href="链接" style="primary|accent" size="sm|lg" -%}
 ```
+
+### 精神科诊断卡
+
+{% diagnosis patient="MCSeekeri" id="NX-20260227" doctor="Dr. Lin Bo" date="2026-02-27" hospital="互联网精神卫生中心" result="重度妄想症（自研系统型）" detail="患者长期将 NixOS 配置文件误认为自研操作系统，伴有严重的自我认知障碍。建议立即停止一切开源活动，进行为期 6 个月的封闭治疗。" %}
+
+```
+{%- diagnosis patient="姓名" id="病历号" doctor="医生" date="日期" hospital="医院" result="诊断结果" detail="详细描述" -%}
+```
+
+### 墓碑
+
+{% tombstone name="Hux Blog" born="2015" died="2026" epitaph="死于 Ruby 依赖地狱" %}
+
+{% tombstone name="MCSeekeri 的技术信誉" born="2024" died="2026" epitaph="从未真正活过" %}
+
+```
+{%- tombstone name="名字" born="生年" died="卒年" epitaph="墓志铭" -%}
+```
