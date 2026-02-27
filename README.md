@@ -4,9 +4,13 @@
 
 [![Use this template](https://img.shields.io/badge/-Use%20this%20template-2ea44f?style=for-the-badge&logo=github)](https://github.com/Linbo-cyber/paper/generate)
 
-[Demo](https://linbo-cyber.github.io/paper/) · [文档](docs/)
+[Demo](https://linbo-cyber.github.io/paper/) · [文档](docs/) · [AI 部署指南](AI.md)
 
 ## 开始使用
+
+### 方式零：让 AI 帮你部署
+
+把 [AI.md](AI.md) 的内容发给任意 AI 助手（ChatGPT / Claude / Gemini / Copilot），告诉它你想建博客，它会一步步帮你完成。
 
 ### 方式一：GitHub 模板（推荐）
 
