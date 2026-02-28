@@ -202,14 +202,16 @@ function processComponents(html) {
     return out;
   });
 
-  // Tombstone: {% tombstone name="..." born="..." died="..." epitaph="..." %}
+  // Tombstone: {% tombstone name="..." born="..." died="..." epitaph="..." incense="true" %}
   html = html.replace(/\{%\s*tombstone\s+([\s\S]*?)%\}/g, (_, attrs) => {
     const get = (k, def) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : def || ''; };
     const name = get('name', 'R.I.P.');
     const born = get('born', '????');
     const died = get('died', '????');
     const epitaph = get('epitaph', '');
-    let out = '<div class="paper-tombstone">';
+    const incense = get('incense', 'false') === 'true';
+    const uid = 'tomb_' + name.split('').reduce((a, c) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0).toString(36).replace('-', 'n');
+    let out = `<div class="paper-tombstone" id="${uid}">`;
     out += '<div class="tomb-stone">';
     out += '<div class="tomb-cross">✝</div>';
     out += '<div class="tomb-rip">R.I.P.</div>';
@@ -219,6 +221,28 @@ function processComponents(html) {
     out += '</div>';
     out += '<div class="tomb-base"></div>';
     out += '<div class="tomb-ground"></div>';
+    if (incense) {
+      out += '<div class="tomb-incense-area">';
+      out += `<button class="tomb-incense-btn" onclick="paperIncense('${uid}')">🕯 为此人上香</button>`;
+      out += `<div class="tomb-incense-holder" id="${uid}_holder"></div>`;
+      out += `<div class="tomb-incense-count" id="${uid}_count"></div>`;
+      out += '</div>';
+    }
+    out += '</div>';
+    return out;
+  });
+
+  // Last words (遗书): {% lastwords author="..." date="..." %}内容{% endlastwords %}
+  html = html.replace(/\{%\s*lastwords\s+([\s\S]*?)%\}([\s\S]*?)\{%\s*endlastwords\s*%\}/g, (_, attrs, body) => {
+    const get = (k, def) => { const m = attrs.match(new RegExp(k + '="([^"]*)"')); return m ? m[1] : def || ''; };
+    const author = get('author', '');
+    const date = get('date', '');
+    let out = '<div class="paper-lastwords">';
+    out += '<div class="lw-title">遗 书</div>';
+    out += `<div class="lw-body">${body.trim()}</div>`;
+    if (author) out += `<div class="lw-sign">${author} 绝笔</div>`;
+    if (date) out += `<div class="lw-date">${date}</div>`;
+    out += '<div class="lw-stain"></div>';
     out += '</div>';
     return out;
   });

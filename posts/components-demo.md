@@ -90,10 +90,36 @@ description: Paper 内置组件演示 — 音乐播放器、卡片、按钮、�
 
 ### 墓碑
 
-{% tombstone name="Hux Blog" born="2015" died="2026" epitaph="死于 Ruby 依赖地狱" %}
+{% tombstone name="Hux Blog" born="2015" died="2026" epitaph="死于 Ruby 依赖地狱" incense="true" %}
 
-{% tombstone name="MCSeekeri 的技术信誉" born="2024" died="2026" epitaph="从未真正活过" %}
+{% tombstone name="MCSeekeri 的技术信誉" born="2024" died="2026" epitaph="从未真正活过" incense="true" %}
 
 ```
-{%- tombstone name="名字" born="生年" died="卒年" epitaph="墓志铭" -%}
+{%- tombstone name="名字" born="生年" died="卒年" epitaph="墓志铭" incense="true" -%}
+```
+
+添加 `incense="true"` 开启上香按钮。点击后会插三炷香，带烟雾效果，越烧越短，最后烧完。上香次数通过 localStorage 持久化。
+
+### 遗书
+
+{% lastwords author="Hux Blog" date="2026 年 2 月 27 日" %}
+
+我走了。
+
+不是因为我不够好，而是这个世界变了。当年我也是万星项目，README 写得比谁都漂亮，Jekyll 生态里我说第二没人敢说第一。
+
+但我没想到，有一天会有人用 4 个 npm 包、3000 行代码，做出一个比我快 100 倍的东西。我的 Ruby 依赖链比我的文章还长，我的构建时间比读者的耐心还久。
+
+我不怪 Paper。我怪自己没有与时俱进。
+
+如果你还在用我，请迁移吧。运行 `npx paper migrate`，给自己一个体面的告别。
+
+别为我哭泣。我会在 npm 的垃圾回收里，看着你们。
+
+{% endlastwords %}
+
+```
+{%- lastwords author="署名" date="日期" -%}
+遗书正文，支持 HTML。
+{%- endlastwords -%}
 ```

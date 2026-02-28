@@ -304,4 +304,53 @@
     }
   });
 
+  // ── Incense (上香) ──────────────────────────────────
+  window.paperIncense = function (uid) {
+    var holder = document.getElementById(uid + '_holder');
+    var countEl = document.getElementById(uid + '_count');
+    var btn = document.querySelector('#' + uid + ' .tomb-incense-btn');
+    if (!holder) return;
+
+    // storage key
+    var key = 'paper_incense_' + uid;
+    var count = parseInt(localStorage.getItem(key) || '0', 10);
+
+    // create 3 sticks
+    holder.innerHTML = '';
+    for (var i = 0; i < 3; i++) {
+      var stick = document.createElement('div');
+      stick.className = 'tomb-stick';
+      var smoke = document.createElement('div');
+      smoke.className = 'tomb-smoke';
+      stick.appendChild(smoke);
+      holder.appendChild(stick);
+    }
+
+    count++;
+    localStorage.setItem(key, count);
+    countEl.textContent = '已有 ' + count + ' 人上香';
+
+    btn.classList.add('burning');
+    btn.textContent = '🙏 香已点燃';
+
+    // after burn complete, re-enable
+    setTimeout(function () {
+      holder.innerHTML = '';
+      btn.classList.remove('burning');
+      btn.textContent = '🕯 为此人上香';
+    }, 8500);
+  };
+
+  // restore incense counts on load
+  document.querySelectorAll('.paper-tombstone').forEach(function (el) {
+    var uid = el.id;
+    if (!uid) return;
+    var key = 'paper_incense_' + uid;
+    var count = parseInt(localStorage.getItem(key) || '0', 10);
+    var countEl = document.getElementById(uid + '_count');
+    if (countEl && count > 0) {
+      countEl.textContent = '已有 ' + count + ' 人上香';
+    }
+  });
+
 })();
