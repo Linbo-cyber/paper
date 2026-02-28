@@ -116,14 +116,14 @@ img { max-width: 100%; height: auto; border-radius: 8px; }
 }
 .search-toggle:hover, .theme-toggle:hover { color: var(--ink); }
 
-/* Theme toggle icon visibility */
-.icon-sun { display: none; }
-.icon-moon { display: inline; }
-[data-theme="dark"] .icon-sun { display: inline; }
-[data-theme="dark"] .icon-moon { display: none; }
+/* Theme toggle icon visibility — show current state icon */
+.icon-sun { display: inline; }
+.icon-moon { display: none; }
+[data-theme="dark"] .icon-sun { display: none; }
+[data-theme="dark"] .icon-moon { display: inline; }
 @media (prefers-color-scheme: dark) {
-  [data-theme="auto"] .icon-sun { display: inline; }
-  [data-theme="auto"] .icon-moon { display: none; }
+  [data-theme="auto"] .icon-sun { display: none; }
+  [data-theme="auto"] .icon-moon { display: inline; }
 }
 
 /* ── Layout ────────────────────────────────────── */
