@@ -305,15 +305,13 @@
   });
 
   // ── Incense (上香) ──────────────────────────────────
+  var COUNTER_API = 'https://api.shitgfw.top/';
+
   window.paperIncense = function (uid) {
     var holder = document.getElementById(uid + '_holder');
     var countEl = document.getElementById(uid + '_count');
     var btn = document.querySelector('#' + uid + ' .tomb-incense-btn');
     if (!holder) return;
-
-    // storage key
-    var key = 'paper_incense_' + uid;
-    var count = parseInt(localStorage.getItem(key) || '0', 10);
 
     // create 3 sticks
     holder.innerHTML = '';
@@ -326,12 +324,14 @@
       holder.appendChild(stick);
     }
 
-    count++;
-    localStorage.setItem(key, count);
-    countEl.textContent = '已有 ' + count + ' 人上香';
-
     btn.classList.add('burning');
     btn.textContent = '🙏 香已点燃';
+
+    // POST +1
+    fetch(COUNTER_API + '?key=incense_' + uid, { method: 'POST' })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { countEl.textContent = '已有 ' + d.count + ' 人上香'; })
+      .catch(function () {});
 
     // after burn complete, re-enable
     setTimeout(function () {
@@ -341,16 +341,18 @@
     }, 8500);
   };
 
-  // restore incense counts on load
+  // restore incense counts on load from API
   document.querySelectorAll('.paper-tombstone').forEach(function (el) {
     var uid = el.id;
     if (!uid) return;
-    var key = 'paper_incense_' + uid;
-    var count = parseInt(localStorage.getItem(key) || '0', 10);
     var countEl = document.getElementById(uid + '_count');
-    if (countEl && count > 0) {
-      countEl.textContent = '已有 ' + count + ' 人上香';
-    }
+    if (!countEl) return;
+    fetch(COUNTER_API + '?key=incense_' + uid)
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.count > 0) countEl.textContent = '已有 ' + d.count + ' 人上香';
+      })
+      .catch(function () {});
   });
 
 })();
